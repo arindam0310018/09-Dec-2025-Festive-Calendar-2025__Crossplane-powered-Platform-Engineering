@@ -343,7 +343,7 @@ III. __Install Helm on Windows.__
 choco install kubernetes-helm
 ```
 
-| Kubectl Installation Logs:- |
+| Helm Installation Logs:- |
 | --------- |
 
 ```
@@ -491,29 +491,28 @@ PS C:\Users\amadmin>
 PS C:\Users\amadmin> cd Desktop\AM-12042025\Festive-Calendar-2025\Crossplane-Powered-Platform-Engg
 PS C:\Users\amadmin\Desktop\AM-12042025\Festive-Calendar-2025\Crossplane-Powered-Platform-Engg>
 
-
-PS C:\Users\amadmin\Desktop\Crossplane>
-PS C:\Users\amadmin\Desktop\Crossplane> kubectl apply -f provider.yaml
+PS C:\Users\amadmin\Desktop\AM-12042025\Festive-Calendar-2025\Crossplane-Powered-Platform-Engg> kubectl apply -f provider.yaml
 provider.pkg.crossplane.io/provider-azure-network created
-PS C:\Users\amadmin\Desktop\Crossplane>
+PS C:\Users\amadmin\Desktop\AM-12042025\Festive-Calendar-2025\Crossplane-Powered-Platform-Engg>
+
 ```
 
 > kubectl get providers
 ```
-PS C:\Users\amadmin\Desktop\Crossplane> kubectl get providers
+PS C:\Users\amadmin\Desktop\AM-12042025\Festive-Calendar-2025\Crossplane-Powered-Platform-Engg> kubectl get providers
 NAME                                       INSTALLED   HEALTHY   PACKAGE                                                                AGE
-crossplane-contrib-provider-family-azure   True        True      xpkg.crossplane.io/crossplane-contrib/provider-family-azure:v1.11.2    32s
-provider-azure-network                     True        True      xpkg.crossplane.io/crossplane-contrib/provider-azure-network:v1.11.2   37s
-PS C:\Users\amadmin\Desktop\Crossplane>
+crossplane-contrib-provider-family-azure   True        True      xpkg.crossplane.io/crossplane-contrib/provider-family-azure:v2.2.0     24s
+provider-azure-network                     True        True      xpkg.crossplane.io/crossplane-contrib/provider-azure-network:v1.11.2   31s
+PS C:\Users\amadmin\Desktop\AM-12042025\Festive-Calendar-2025\Crossplane-Powered-Platform-Engg>
 ```
 
 Step 3: __Create an Azure Service Principal:-__
 
 > az ad sp create-for-rbac --sdk-auth --role Owner --scopes /subscriptions/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
-PS C:\Users\amadmin\Desktop\Crossplane> az ad sp create-for-rbac --sdk-auth --role Owner --scopes /subscriptions/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+PS C:\Users\amadmin\Desktop\AM-12042025\Festive-Calendar-2025\Crossplane-Powered-Platform-Engg> az ad sp create-for-rbac --sdk-auth --role Owner --scopes /subscriptions/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Option '--sdk-auth' has been deprecated and will be removed in a future release.
-Creating 'Owner' role assignment under scope '/subscriptions/0e5fbaff-a521-4b8a-88a9-6b02feb20a59'
+Creating 'Owner' role assignment under scope '/subscriptions/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 The output includes credentials that you must protect. Be sure that you do not include these credentials in your code or check the credentials into your source control. For more information, see https://aka.ms/azadsp-cli
 {
   "clientId": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
@@ -527,10 +526,10 @@ The output includes credentials that you must protect. Be sure that you do not i
   "galleryEndpointUrl": "https://gallery.azure.com/",
   "managementEndpointUrl": "https://management.core.windows.net/"
 }
-PS C:\Users\amadmin\Desktop\Crossplane>
+PS C:\Users\amadmin\Desktop\AM-12042025\Festive-Calendar-2025\Crossplane-Powered-Platform-Engg>
 ```
 
-🔥 Important Note: __Save your Azure JSON output as "azure-credentials.json".__
+Important Note: __Save your Azure JSON output as "azure-credentials.json".__
 
 Step 4: __Create a Kubernetes secret with the Azure credentials:-__ 
 
@@ -538,14 +537,14 @@ __A Kubernetes generic secret has a name and contents. kubectl create secret wil
 
 > kubectl create secret generic azure-secret -n am-crossplane --from-file=creds=./azure-credentials.json
 ```
-PS C:\Users\amadmin\Desktop\Crossplane> kubectl create secret generic azure-secret -n am-crossplane --from-file=creds=./azure-credentials.json
+PS C:\Users\amadmin\Desktop\AM-12042025\Festive-Calendar-2025\Crossplane-Powered-Platform-Engg> kubectl create secret generic azure-secret -n am-crossplane --from-file=creds=./azure-credentials.json
 secret/azure-secret created
 PS C:\Users\amadmin\Desktop\Crossplane>
 ```
 
 > kubectl describe secret azure-secret -n am-crossplane
 ```
-PS C:\Users\amadmin\Desktop\Crossplane> kubectl describe secret azure-secret -n am-crossplane
+PS C:\Users\amadmin\Desktop\AM-12042025\Festive-Calendar-2025\Crossplane-Powered-Platform-Engg> kubectl describe secret azure-secret -n am-crossplane
 Name:         azure-secret
 Namespace:    am-crossplane
 Labels:       <none>
@@ -555,8 +554,9 @@ Type:  Opaque
 
 Data
 ====
-creds:  661 bytes
-PS C:\Users\amadmin\Desktop\Crossplane>
+creds:  639 bytes
+
+PS C:\Users\amadmin\Desktop\AM-12042025\Festive-Calendar-2025\Crossplane-Powered-Platform-Engg>
 ```
 
 Step 5: __Create Provider Config:-__ 
@@ -580,193 +580,176 @@ spec:
 
 > kubectl apply -f providerconfig.yaml
 ```
-PS C:\Users\amadmin\Desktop\Crossplane> kubectl apply -f providerconfig.yaml
+PS C:\Users\amadmin\Desktop\AM-12042025\Festive-Calendar-2025\Crossplane-Powered-Platform-Engg> kubectl apply -f providerconfig.yaml
 providerconfig.azure.upbound.io/am-azure-provider-config created
-PS C:\Users\amadmin\Desktop\Crossplane>
+
+PS C:\Users\amadmin\Desktop\AM-12042025\Festive-Calendar-2025\Crossplane-Powered-Platform-Engg>
+```
+
+Step 6: __Ensure CRDs are installed:-__
+
+> kubectl get crds
+```
+PS C:\Users\amadmin\Desktop\AM-12042025\Festive-Calendar-2025\Crossplane-Powered-Platform-Engg> kubectl get crds
+NAME                                                                            CREATED AT
+applicationgateways.network.azure.upbound.io                                    2025-12-08T20:05:36Z
+applicationsecuritygroups.network.azure.upbound.io                              2025-12-08T20:05:33Z
+bastionhosts.network.azure.upbound.io                                           2025-12-08T20:05:33Z
+clusterproviderconfigs.azure.m.upbound.io                                       2025-12-08T20:05:33Z
+clusterusages.protection.crossplane.io                                          2025-12-08T19:49:48Z
+compositeresourcedefinitions.apiextensions.crossplane.io                        2025-12-08T19:49:47Z
+compositionrevisions.apiextensions.crossplane.io                                2025-12-08T19:49:47Z
+compositions.apiextensions.crossplane.io                                        2025-12-08T19:49:47Z
+configurationrevisions.pkg.crossplane.io                                        2025-12-08T19:49:47Z
+configurations.pkg.crossplane.io                                                2025-12-08T19:49:47Z
+connectionmonitors.network.azure.upbound.io                                     2025-12-08T20:05:33Z
+cronoperations.ops.crossplane.io                                                2025-12-08T19:49:47Z
+ddosprotectionplans.network.azure.upbound.io                                    2025-12-08T20:05:33Z
+deploymentruntimeconfigs.pkg.crossplane.io                                      2025-12-08T19:49:48Z
+dnsaaaarecords.network.azure.upbound.io                                         2025-12-08T20:05:33Z
+dnsarecords.network.azure.upbound.io                                            2025-12-08T20:05:33Z
+dnscaarecords.network.azure.upbound.io                                          2025-12-08T20:05:33Z
+dnscnamerecords.network.azure.upbound.io                                        2025-12-08T20:05:33Z
+dnsmxrecords.network.azure.upbound.io                                           2025-12-08T20:05:33Z
+dnsnsrecords.network.azure.upbound.io                                           2025-12-08T20:05:33Z
+dnsptrrecords.network.azure.upbound.io                                          2025-12-08T20:05:33Z
+dnssrvrecords.network.azure.upbound.io                                          2025-12-08T20:05:33Z
+dnstxtrecords.network.azure.upbound.io                                          2025-12-08T20:05:33Z
+dnszones.network.azure.upbound.io                                               2025-12-08T20:05:33Z
+environmentconfigs.apiextensions.crossplane.io                                  2025-12-08T19:49:47Z
+expressroutecircuitauthorizations.network.azure.upbound.io                      2025-12-08T20:05:33Z
+expressroutecircuitconnections.network.azure.upbound.io                         2025-12-08T20:05:33Z
+expressroutecircuitpeerings.network.azure.upbound.io                            2025-12-08T20:05:34Z
+expressroutecircuits.network.azure.upbound.io                                   2025-12-08T20:05:33Z
+expressrouteconnections.network.azure.upbound.io                                2025-12-08T20:05:34Z
+expressroutegateways.network.azure.upbound.io                                   2025-12-08T20:05:33Z
+expressrouteports.network.azure.upbound.io                                      2025-12-08T20:05:34Z
+firewallapplicationrulecollections.network.azure.upbound.io                     2025-12-08T20:05:33Z
+firewallnatrulecollections.network.azure.upbound.io                             2025-12-08T20:05:33Z
+firewallnetworkrulecollections.network.azure.upbound.io                         2025-12-08T20:05:34Z
+firewallpolicies.network.azure.upbound.io                                       2025-12-08T20:05:35Z
+firewallpolicyrulecollectiongroups.network.azure.upbound.io                     2025-12-08T20:05:34Z
+firewalls.network.azure.upbound.io                                              2025-12-08T20:05:34Z
+frontdoorcustomhttpsconfigurations.network.azure.upbound.io                     2025-12-08T20:05:34Z
+frontdoorfirewallpolicies.network.azure.upbound.io                              2025-12-08T20:05:34Z
+frontdoorrulesengines.network.azure.upbound.io                                  2025-12-08T20:05:33Z
+frontdoors.network.azure.upbound.io                                             2025-12-08T20:05:35Z
+functionrevisions.pkg.crossplane.io                                             2025-12-08T19:49:48Z
+functions.pkg.crossplane.io                                                     2025-12-08T19:49:48Z
+imageconfigs.pkg.crossplane.io                                                  2025-12-08T19:49:48Z
+imagejobs.eraser.sh                                                             2025-12-08T19:39:35Z
+imagelists.eraser.sh                                                            2025-12-08T19:39:35Z
+ipgroups.network.azure.upbound.io                                               2025-12-08T20:05:33Z
+loadbalancerbackendaddresspooladdresses.network.azure.upbound.io                2025-12-08T20:05:34Z
+loadbalancerbackendaddresspools.network.azure.upbound.io                        2025-12-08T20:05:34Z
+loadbalancernatpools.network.azure.upbound.io                                   2025-12-08T20:05:34Z
+loadbalancernatrules.network.azure.upbound.io                                   2025-12-08T20:05:34Z
+loadbalanceroutboundrules.network.azure.upbound.io                              2025-12-08T20:05:34Z
+loadbalancerprobes.network.azure.upbound.io                                     2025-12-08T20:05:33Z
+loadbalancerrules.network.azure.upbound.io                                      2025-12-08T20:05:34Z
+loadbalancers.network.azure.upbound.io                                          2025-12-08T20:05:35Z
+localnetworkgateways.network.azure.upbound.io                                   2025-12-08T20:05:34Z
+locks.pkg.crossplane.io                                                         2025-12-08T19:49:48Z
+managedresourceactivationpolicies.apiextensions.crossplane.io                   2025-12-08T19:49:47Z
+managedresourcedefinitions.apiextensions.crossplane.io                          2025-12-08T19:49:47Z
+managermanagementgroupconnections.network.azure.upbound.io                      2025-12-08T20:05:34Z
+managernetworkgroups.network.azure.upbound.io                                   2025-12-08T20:05:34Z
+managers.network.azure.upbound.io                                               2025-12-08T20:05:34Z
+managerstaticmembers.network.azure.upbound.io                                   2025-12-08T20:05:34Z
+managersubscriptionconnections.network.azure.upbound.io                         2025-12-08T20:05:34Z
+natgatewaypublicipassociations.network.azure.upbound.io                         2025-12-08T20:05:34Z
+natgatewaypublicipprefixassociations.network.azure.upbound.io                   2025-12-08T20:05:35Z
+natgateways.network.azure.upbound.io                                            2025-12-08T20:05:35Z
+networkinterfaceapplicationsecuritygroupassociations.network.azure.upbound.io   2025-12-08T20:05:35Z
+networkinterfacebackendaddresspoolassociations.network.azure.upbound.io         2025-12-08T20:05:34Z
+networkinterfacenatruleassociations.network.azure.upbound.io                    2025-12-08T20:05:34Z
+networkinterfaces.network.azure.upbound.io                                      2025-12-08T20:05:34Z
+networkinterfacesecuritygroupassociations.network.azure.upbound.io              2025-12-08T20:05:34Z
+operations.ops.crossplane.io                                                    2025-12-08T19:49:47Z
+packetcaptures.network.azure.upbound.io                                         2025-12-08T20:05:35Z
+pointtositevpngateways.network.azure.upbound.io                                 2025-12-08T20:05:36Z
+privatednsaaaarecords.network.azure.upbound.io                                  2025-12-08T20:05:34Z
+privatednsarecords.network.azure.upbound.io                                     2025-12-08T20:05:34Z
+privatednscnamerecords.network.azure.upbound.io                                 2025-12-08T20:05:34Z
+privatednsmxrecords.network.azure.upbound.io                                    2025-12-08T20:05:36Z
+privatednsptrrecords.network.azure.upbound.io                                   2025-12-08T20:05:35Z
+privatednsresolverinboundendpoints.network.azure.upbound.io                     2025-12-08T20:05:35Z
+privatednsresolveroutboundendpoints.network.azure.upbound.io                    2025-12-08T20:05:35Z
+privatednsresolvers.network.azure.upbound.io                                    2025-12-08T20:05:36Z
+privatednssrvrecords.network.azure.upbound.io                                   2025-12-08T20:05:36Z
+privatednstxtrecords.network.azure.upbound.io                                   2025-12-08T20:05:36Z
+privatednszones.network.azure.upbound.io                                        2025-12-08T20:05:35Z
+privatednszonevirtualnetworklinks.network.azure.upbound.io                      2025-12-08T20:05:35Z
+privateendpointapplicationsecuritygroupassociations.network.azure.upbound.io    2025-12-08T20:05:35Z
+privateendpoints.network.azure.upbound.io                                       2025-12-08T20:05:37Z
+privatelinkservices.network.azure.upbound.io                                    2025-12-08T20:05:36Z
+profiles.network.azure.upbound.io                                               2025-12-08T20:05:36Z
+providerconfigs.azure.m.upbound.io                                              2025-12-08T20:05:33Z
+providerconfigs.azure.upbound.io                                                2025-12-08T20:05:33Z
+providerconfigusages.azure.m.upbound.io                                         2025-12-08T20:05:33Z
+providerconfigusages.azure.upbound.io                                           2025-12-08T20:05:33Z
+providerrevisions.pkg.crossplane.io                                             2025-12-08T19:49:48Z
+providers.pkg.crossplane.io                                                     2025-12-08T19:49:48Z
+publicipprefixes.network.azure.upbound.io                                       2025-12-08T20:05:36Z
+publicips.network.azure.upbound.io                                              2025-12-08T20:05:36Z
+resourcegroups.azure.m.upbound.io                                               2025-12-08T20:05:34Z
+resourcegroups.azure.upbound.io                                                 2025-12-08T20:05:33Z
+resourceproviderregistrations.azure.m.upbound.io                                2025-12-08T20:05:33Z
+resourceproviderregistrations.azure.upbound.io                                  2025-12-08T20:05:34Z
+routefilters.network.azure.upbound.io                                           2025-12-08T20:05:37Z
+routemaps.network.azure.upbound.io                                              2025-12-08T20:05:37Z
+routes.network.azure.upbound.io                                                 2025-12-08T20:05:36Z
+routeserverbgpconnections.network.azure.upbound.io                              2025-12-08T20:05:37Z
+routeservers.network.azure.upbound.io                                           2025-12-08T20:05:37Z
+routetables.network.azure.upbound.io                                            2025-12-08T20:05:36Z
+secretproviderclasses.secrets-store.csi.x-k8s.io                                2025-12-08T19:40:14Z
+secretproviderclasspodstatuses.secrets-store.csi.x-k8s.io                       2025-12-08T19:40:15Z
+securitygroups.network.azure.upbound.io                                         2025-12-08T20:05:37Z
+securityrules.network.azure.upbound.io                                          2025-12-08T20:05:36Z
+subnetnatgatewayassociations.network.azure.upbound.io                           2025-12-08T20:05:36Z
+subnetnetworksecuritygroupassociations.network.azure.upbound.io                 2025-12-08T20:05:38Z
+subnetroutetableassociations.network.azure.upbound.io                           2025-12-08T20:05:37Z
+subnets.network.azure.upbound.io                                                2025-12-08T20:05:39Z
+subnetserviceendpointstoragepolicies.network.azure.upbound.io                   2025-12-08T20:05:37Z
+subscriptions.azure.m.upbound.io                                                2025-12-08T20:05:33Z
+subscriptions.azure.upbound.io                                                  2025-12-08T20:05:33Z
+trafficmanagerazureendpoints.network.azure.upbound.io                           2025-12-08T20:05:37Z
+trafficmanagerexternalendpoints.network.azure.upbound.io                        2025-12-08T20:05:37Z
+trafficmanagernestedendpoints.network.azure.upbound.io                          2025-12-08T20:05:37Z
+trafficmanagerprofiles.network.azure.upbound.io                                 2025-12-08T20:05:39Z
+usages.apiextensions.crossplane.io                                              2025-12-08T19:49:47Z
+usages.protection.crossplane.io                                                 2025-12-08T19:49:48Z
+virtualhubconnections.network.azure.upbound.io                                  2025-12-08T20:05:38Z
+virtualhubips.network.azure.upbound.io                                          2025-12-08T20:05:38Z
+virtualhubroutetableroutes.network.azure.upbound.io                             2025-12-08T20:05:37Z
+virtualhubroutetables.network.azure.upbound.io                                  2025-12-08T20:05:39Z
+virtualhubs.network.azure.upbound.io                                            2025-12-08T20:05:39Z
+virtualhubsecuritypartnerproviders.network.azure.upbound.io                     2025-12-08T20:05:37Z
+virtualnetworkgatewayconnections.network.azure.upbound.io                       2025-12-08T20:05:41Z
+virtualnetworkgateways.network.azure.upbound.io                                 2025-12-08T20:05:40Z
+virtualnetworkpeerings.network.azure.upbound.io                                 2025-12-08T20:05:39Z
+virtualnetworks.network.azure.upbound.io                                        2025-12-08T20:05:38Z
+virtualwans.network.azure.upbound.io                                            2025-12-08T20:05:39Z
+volumesnapshotclasses.snapshot.storage.k8s.io                                   2025-12-08T19:39:46Z
+volumesnapshotcontents.snapshot.storage.k8s.io                                  2025-12-08T19:39:46Z
+volumesnapshots.snapshot.storage.k8s.io                                         2025-12-08T19:39:46Z
+vpngatewayconnections.network.azure.upbound.io                                  2025-12-08T20:05:40Z
+vpngateways.network.azure.upbound.io                                            2025-12-08T20:05:39Z
+vpnserverconfigurationpolicygroups.network.azure.upbound.io                     2025-12-08T20:05:38Z
+vpnserverconfigurations.network.azure.upbound.io                                2025-12-08T20:05:38Z
+vpnsites.network.azure.upbound.io                                               2025-12-08T20:05:38Z
+watcherflowlogs.network.azure.upbound.io                                        2025-12-08T20:05:40Z
+watchers.network.azure.upbound.io                                               2025-12-08T20:05:38Z
+watchoperations.ops.crossplane.io                                               2025-12-08T19:49:47Z
+webapplicationfirewallpolicies.network.azure.upbound.io                         2025-12-08T20:05:39Z
+
+PS C:\Users\amadmin\Desktop\AM-12042025\Festive-Calendar-2025\Crossplane-Powered-Platform-Engg>
 ```
 
 | 05: Deploying Azure resources using Crossplane:- |
 | --------- |
 
 __rg.yaml:-__
-```
-apiVersion: azure.crossplane.io/v1alpha3
-kind: ResourceGroup
-metadata:
-  name: am-100
-spec:
-  forProvider:
-    location: West Europe
-  providerConfigRef:
-    name: am-azure-provider-config
-```
-> kubectl apply -f rg.yaml
-
-| Below Follows the ERROR Logs:- |
-| --------- | 
-
-```
-PS C:\Users\amadmin\Desktop\Crossplane> kubectl apply -f rg.yaml
-error: resource mapping not found for name: "am-100" namespace: "" from "rg.yaml": no matches for kind "ResourceGroup" in version "azure.crossplane.io/v1alpha3"
-ensure CRDs are installed first
-PS C:\Users\amadmin\Desktop\Crossplane>
-```
-
-| Troubleshooting:- |
-| --------- | 
-
-Ensure CRDs are installed.
-
-> kubectl get crds
-```
-PS C:\Users\amadmin> kubectl get crds
-NAME                                                                            CREATED AT
-applicationgateways.network.azure.upbound.io                                    2025-05-08T09:36:05Z
-applicationsecuritygroups.network.azure.upbound.io                              2025-05-08T09:36:04Z
-bastionhosts.network.azure.upbound.io                                           2025-05-08T09:36:04Z
-compositeresourcedefinitions.apiextensions.crossplane.io                        2025-05-08T09:19:39Z
-compositionrevisions.apiextensions.crossplane.io                                2025-05-08T09:19:39Z
-compositions.apiextensions.crossplane.io                                        2025-05-08T09:19:39Z
-configurationrevisions.pkg.crossplane.io                                        2025-05-08T09:19:39Z
-configurations.pkg.crossplane.io                                                2025-05-08T09:19:39Z
-connectionmonitors.network.azure.upbound.io                                     2025-05-08T09:36:05Z
-controllerconfigs.pkg.crossplane.io                                             2025-05-08T09:19:39Z
-ddosprotectionplans.network.azure.upbound.io                                    2025-05-08T09:36:04Z
-deploymentruntimeconfigs.pkg.crossplane.io                                      2025-05-08T09:19:40Z
-dnsaaaarecords.network.azure.upbound.io                                         2025-05-08T09:36:04Z
-dnsarecords.network.azure.upbound.io                                            2025-05-08T09:36:04Z
-dnscaarecords.network.azure.upbound.io                                          2025-05-08T09:36:05Z
-dnscnamerecords.network.azure.upbound.io                                        2025-05-08T09:36:05Z
-dnsmxrecords.network.azure.upbound.io                                           2025-05-08T09:36:04Z
-dnsnsrecords.network.azure.upbound.io                                           2025-05-08T09:36:04Z
-dnsptrrecords.network.azure.upbound.io                                          2025-05-08T09:36:05Z
-dnssrvrecords.network.azure.upbound.io                                          2025-05-08T09:36:05Z
-dnstxtrecords.network.azure.upbound.io                                          2025-05-08T09:36:05Z
-dnszones.network.azure.upbound.io                                               2025-05-08T09:36:05Z
-environmentconfigs.apiextensions.crossplane.io                                  2025-05-08T09:19:39Z
-expressroutecircuitauthorizations.network.azure.upbound.io                      2025-05-08T09:36:05Z
-expressroutecircuitconnections.network.azure.upbound.io                         2025-05-08T09:36:05Z
-expressroutecircuitpeerings.network.azure.upbound.io                            2025-05-08T09:36:05Z
-expressroutecircuits.network.azure.upbound.io                                   2025-05-08T09:36:05Z
-expressrouteconnections.network.azure.upbound.io                                2025-05-08T09:36:06Z
-expressroutegateways.network.azure.upbound.io                                   2025-05-08T09:36:05Z
-expressrouteports.network.azure.upbound.io                                      2025-05-08T09:36:05Z
-firewallapplicationrulecollections.network.azure.upbound.io                     2025-05-08T09:36:05Z
-firewallnatrulecollections.network.azure.upbound.io                             2025-05-08T09:36:05Z
-firewallnetworkrulecollections.network.azure.upbound.io                         2025-05-08T09:36:05Z
-firewallpolicies.network.azure.upbound.io                                       2025-05-08T09:36:05Z
-firewallpolicyrulecollectiongroups.network.azure.upbound.io                     2025-05-08T09:36:05Z
-firewalls.network.azure.upbound.io                                              2025-05-08T09:36:05Z
-frontdoorcustomhttpsconfigurations.network.azure.upbound.io                     2025-05-08T09:36:05Z
-frontdoorfirewallpolicies.network.azure.upbound.io                              2025-05-08T09:36:05Z
-frontdoorrulesengines.network.azure.upbound.io                                  2025-05-08T09:36:05Z
-frontdoors.network.azure.upbound.io                                             2025-05-08T09:36:06Z
-functionrevisions.pkg.crossplane.io                                             2025-05-08T09:19:40Z
-functions.pkg.crossplane.io                                                     2025-05-08T09:19:40Z
-imageconfigs.pkg.crossplane.io                                                  2025-05-08T09:19:40Z
-imagejobs.eraser.sh                                                             2025-05-08T06:03:34Z
-imagelists.eraser.sh                                                            2025-05-08T06:03:34Z
-ipgroups.network.azure.upbound.io                                               2025-05-08T09:36:05Z
-loadbalancerbackendaddresspooladdresses.network.azure.upbound.io                2025-05-08T09:36:06Z
-loadbalancerbackendaddresspools.network.azure.upbound.io                        2025-05-08T09:36:05Z
-loadbalancernatpools.network.azure.upbound.io                                   2025-05-08T09:36:06Z
-loadbalancernatrules.network.azure.upbound.io                                   2025-05-08T09:36:06Z
-loadbalanceroutboundrules.network.azure.upbound.io                              2025-05-08T09:36:06Z
-loadbalancerprobes.network.azure.upbound.io                                     2025-05-08T09:36:06Z
-loadbalancerrules.network.azure.upbound.io                                      2025-05-08T09:36:06Z
-loadbalancers.network.azure.upbound.io                                          2025-05-08T09:36:06Z
-localnetworkgateways.network.azure.upbound.io                                   2025-05-08T09:36:06Z
-locks.pkg.crossplane.io                                                         2025-05-08T09:19:40Z
-managermanagementgroupconnections.network.azure.upbound.io                      2025-05-08T09:36:06Z
-managernetworkgroups.network.azure.upbound.io                                   2025-05-08T09:36:06Z
-managers.network.azure.upbound.io                                               2025-05-08T09:36:06Z
-managerstaticmembers.network.azure.upbound.io                                   2025-05-08T09:36:06Z
-managersubscriptionconnections.network.azure.upbound.io                         2025-05-08T09:36:07Z
-natgatewaypublicipassociations.network.azure.upbound.io                         2025-05-08T09:36:07Z
-natgatewaypublicipprefixassociations.network.azure.upbound.io                   2025-05-08T09:36:06Z
-natgateways.network.azure.upbound.io                                            2025-05-08T09:36:06Z
-networkinterfaceapplicationsecuritygroupassociations.network.azure.upbound.io   2025-05-08T09:36:06Z
-networkinterfacebackendaddresspoolassociations.network.azure.upbound.io         2025-05-08T09:36:07Z
-networkinterfacenatruleassociations.network.azure.upbound.io                    2025-05-08T09:36:06Z
-networkinterfaces.network.azure.upbound.io                                      2025-05-08T09:36:07Z
-networkinterfacesecuritygroupassociations.network.azure.upbound.io              2025-05-08T09:36:07Z
-packetcaptures.network.azure.upbound.io                                         2025-05-08T09:36:07Z
-podmonitors.azmonitoring.coreos.com                                             2025-05-08T06:07:15Z
-pointtositevpngateways.network.azure.upbound.io                                 2025-05-08T09:36:07Z
-privatednsaaaarecords.network.azure.upbound.io                                  2025-05-08T09:36:07Z
-privatednsarecords.network.azure.upbound.io                                     2025-05-08T09:36:07Z
-privatednscnamerecords.network.azure.upbound.io                                 2025-05-08T09:36:07Z
-privatednsmxrecords.network.azure.upbound.io                                    2025-05-08T09:36:07Z
-privatednsptrrecords.network.azure.upbound.io                                   2025-05-08T09:36:07Z
-privatednsresolverinboundendpoints.network.azure.upbound.io                     2025-05-08T09:36:07Z
-privatednsresolveroutboundendpoints.network.azure.upbound.io                    2025-05-08T09:36:07Z
-privatednsresolvers.network.azure.upbound.io                                    2025-05-08T09:36:07Z
-privatednssrvrecords.network.azure.upbound.io                                   2025-05-08T09:36:07Z
-privatednstxtrecords.network.azure.upbound.io                                   2025-05-08T09:36:07Z
-privatednszones.network.azure.upbound.io                                        2025-05-08T09:36:07Z
-privatednszonevirtualnetworklinks.network.azure.upbound.io                      2025-05-08T09:36:07Z
-privateendpointapplicationsecuritygroupassociations.network.azure.upbound.io    2025-05-08T09:36:07Z
-privateendpoints.network.azure.upbound.io                                       2025-05-08T09:36:07Z
-privatelinkservices.network.azure.upbound.io                                    2025-05-08T09:36:08Z
-profiles.network.azure.upbound.io                                               2025-05-08T09:36:08Z
-providerconfigs.azure.upbound.io                                                2025-05-08T09:36:01Z
-providerconfigusages.azure.upbound.io                                           2025-05-08T09:36:01Z
-providerrevisions.pkg.crossplane.io                                             2025-05-08T09:19:40Z
-providers.pkg.crossplane.io                                                     2025-05-08T09:19:40Z
-publicipprefixes.network.azure.upbound.io                                       2025-05-08T09:36:08Z
-publicips.network.azure.upbound.io                                              2025-05-08T09:36:08Z
-resourcegroups.azure.upbound.io                                                 2025-05-08T09:36:01Z
-resourceproviderregistrations.azure.upbound.io                                  2025-05-08T09:36:01Z
-routefilters.network.azure.upbound.io                                           2025-05-08T09:36:08Z
-routemaps.network.azure.upbound.io                                              2025-05-08T09:36:07Z
-routes.network.azure.upbound.io                                                 2025-05-08T09:36:08Z
-routeserverbgpconnections.network.azure.upbound.io                              2025-05-08T09:36:08Z
-routeservers.network.azure.upbound.io                                           2025-05-08T09:36:08Z
-routetables.network.azure.upbound.io                                            2025-05-08T09:36:08Z
-securitygroups.network.azure.upbound.io                                         2025-05-08T09:36:08Z
-securityrules.network.azure.upbound.io                                          2025-05-08T09:36:08Z
-servicemonitors.azmonitoring.coreos.com                                         2025-05-08T06:07:15Z
-storeconfigs.azure.upbound.io                                                   2025-05-08T09:36:01Z
-storeconfigs.secrets.crossplane.io                                              2025-05-08T09:19:40Z
-subnetnatgatewayassociations.network.azure.upbound.io                           2025-05-08T09:36:08Z
-subnetnetworksecuritygroupassociations.network.azure.upbound.io                 2025-05-08T09:36:09Z
-subnetroutetableassociations.network.azure.upbound.io                           2025-05-08T09:36:08Z
-subnets.network.azure.upbound.io                                                2025-05-08T09:36:08Z
-subnetserviceendpointstoragepolicies.network.azure.upbound.io                   2025-05-08T09:36:09Z
-subscriptions.azure.upbound.io                                                  2025-05-08T09:36:01Z
-trafficmanagerazureendpoints.network.azure.upbound.io                           2025-05-08T09:36:09Z
-trafficmanagerexternalendpoints.network.azure.upbound.io                        2025-05-08T09:36:08Z
-trafficmanagernestedendpoints.network.azure.upbound.io                          2025-05-08T09:36:08Z
-trafficmanagerprofiles.network.azure.upbound.io                                 2025-05-08T09:36:09Z
-usages.apiextensions.crossplane.io                                              2025-05-08T09:19:39Z
-virtualhubconnections.network.azure.upbound.io                                  2025-05-08T09:36:09Z
-virtualhubips.network.azure.upbound.io                                          2025-05-08T09:36:09Z
-virtualhubroutetableroutes.network.azure.upbound.io                             2025-05-08T09:36:09Z
-virtualhubroutetables.network.azure.upbound.io                                  2025-05-08T09:36:09Z
-virtualhubs.network.azure.upbound.io                                            2025-05-08T09:36:09Z
-virtualhubsecuritypartnerproviders.network.azure.upbound.io                     2025-05-08T09:36:09Z
-virtualnetworkgatewayconnections.network.azure.upbound.io                       2025-05-08T09:36:10Z
-virtualnetworkgateways.network.azure.upbound.io                                 2025-05-08T09:36:10Z
-virtualnetworkpeerings.network.azure.upbound.io                                 2025-05-08T09:36:09Z
-virtualnetworks.network.azure.upbound.io                                        2025-05-08T09:36:10Z
-virtualwans.network.azure.upbound.io                                            2025-05-08T09:36:09Z
-volumesnapshotclasses.snapshot.storage.k8s.io                                   2025-05-08T06:02:07Z
-volumesnapshotcontents.snapshot.storage.k8s.io                                  2025-05-08T06:02:07Z
-volumesnapshots.snapshot.storage.k8s.io                                         2025-05-08T06:02:07Z
-vpngatewayconnections.network.azure.upbound.io                                  2025-05-08T09:36:10Z
-vpngateways.network.azure.upbound.io                                            2025-05-08T09:36:10Z
-vpnserverconfigurationpolicygroups.network.azure.upbound.io                     2025-05-08T09:36:09Z
-vpnserverconfigurations.network.azure.upbound.io                                2025-05-08T09:36:10Z
-vpnsites.network.azure.upbound.io                                               2025-05-08T09:36:10Z
-watcherflowlogs.network.azure.upbound.io                                        2025-05-08T09:36:10Z
-watchers.network.azure.upbound.io                                               2025-05-08T09:36:10Z
-webapplicationfirewallpolicies.network.azure.upbound.io                         2025-05-08T09:36:10Z
-PS C:\Users\amadmin>
-```
-
-- API Version needs to be changed. 
-- The Crossplane Azure provider has evolved, and the CRDs are now managed under the azure.upbound.io API group, with the ResourceGroup kind available in version v1beta1.
-- Below follows the updated "rg.yaml" file.
 
 ```
 apiVersion: azure.upbound.io/v1beta1
@@ -782,14 +765,15 @@ spec:
 
 > kubectl apply -f rg.yaml
 ```
-PS C:\Users\amadmin\Desktop\Crossplane> kubectl apply -f rg.yaml
+PS C:\Users\amadmin\Desktop\AM-12042025\Festive-Calendar-2025\Crossplane-Powered-Platform-Engg> kubectl apply -f rg.yaml
 resourcegroup.azure.upbound.io/am-100 created
-PS C:\Users\amadmin\Desktop\Crossplane>
+
+PS C:\Users\amadmin\Desktop\AM-12042025\Festive-Calendar-2025\Crossplane-Powered-Platform-Engg>
 ```
 
 __Resource group "am-100" was successfully created.__
 
-| <img src="Images/10-Crossplane-rg.jpg" alt="Crossplane-rg"> |
+| <img src="Images/11-Crossplane-rg.jpg" alt="Crossplane-rg"> |
 | --------- |
 
 | 06: Delete Azure resources using Crossplane - Command-Line:- |
@@ -797,9 +781,10 @@ __Resource group "am-100" was successfully created.__
 
 > kubectl delete resourcegroup.azure.upbound.io am-100
 ```
-PS C:\Users\amadmin\Desktop\Crossplane> kubectl delete resourcegroup.azure.upbound.io am-100
+PS C:\Users\amadmin\Desktop\AM-12042025\Festive-Calendar-2025\Crossplane-Powered-Platform-Engg> kubectl delete resourcegroup.azure.upbound.io am-100
 resourcegroup.azure.upbound.io "am-100" deleted
-PS C:\Users\amadmin\Desktop\Crossplane>
+
+PS C:\Users\amadmin\Desktop\AM-12042025\Festive-Calendar-2025\Crossplane-Powered-Platform-Engg>
 ```
 
 __Hope You Enjoyed the Session!!!__
