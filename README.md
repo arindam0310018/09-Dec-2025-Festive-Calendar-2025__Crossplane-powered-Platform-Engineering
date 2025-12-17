@@ -9,6 +9,13 @@ Join me to learn more!
 | <img src="Images/01-Festive-Calendar-2025-Banner.jpg" alt="Festive-Calendar-2025"> | 
 | --------- |
 
+| __VIRTUAL SESSION:-__ |
+| --------- |
+| __LIVE DEMO__ was Recorded as part of my Presentation in __Festive Calendar 2025__ |
+| Duration of My Demo = __XX Mins XX Secs__ |
+| [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/xxxxxxxxxxxxxxxx/0.jpg)](https://www.youtube.com/watch?v=xxxxxx) |
+
+
 | Agenda:- |
 | --------- |
 
