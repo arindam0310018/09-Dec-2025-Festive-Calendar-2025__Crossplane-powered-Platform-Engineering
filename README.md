@@ -12,7 +12,7 @@ Join me to learn more!
 | __VIRTUAL SESSION:-__ |
 | --------- |
 | __LIVE DEMO__ was Recorded as part of my Presentation in __Festive Calendar 2025__ |
-| Duration of My Demo = __XX Mins XX Secs__ |
+| Duration of My Demo = __25 Mins 35 Secs__ |
 | [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/9DMBOyswyLk/0.jpg)](https://www.youtube.com/watch?v=9DMBOyswyLk) |
 
 
